@@ -42,7 +42,16 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
       
-      ###dotnet publish -c Release -r linux-x64 --self-contained true -o ./publish_ubuntu
+      ###dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+      ###dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true
+      
+    - name: publish-windows
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+
+    - name: publish-linux
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true
       
     - name: Show Github infos
       run:  echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'     
@@ -58,8 +67,8 @@ jobs:
         tag_name: ${{ github.run_number }}
         body: ${{ github.event.head_commit.message }}
 
-    - name: Zipping up Release folder
-      run: 7z a release.zip "${{ github.workspace }}\bin\Release\"
+    # - name: Zipping up Release folder
+      # run: 7z a release.zip "${{ github.workspace }}\bin\Release\"
             
     - name: Upload Release
       uses: softprops/action-gh-release@v2
@@ -68,7 +77,7 @@ jobs:
         prerelease: false    
         tag_name: ${{ github.run_number }}
         body: ${{ github.event.head_commit.message }}
-        files: ${{ github.workspace }}\release.zip
+        files: ${{ github.workspace }}\bin\Release\net8.0\win-x64\publish\ClockConsoleApp.exe, ${{ github.workspace }}\bin\Release\net8.0\linux-x64\publish\ClockConsoleApp
       env:
         GITHUB_TOKEN: ${{ github.token }} 
         
