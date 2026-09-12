@@ -52,14 +52,16 @@ jobs:
       
     - name: publish-windows
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
 
     - name: publish-linux
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true
+      run: dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
       
-    - name: Show Github infos
-      run:  echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'     
+    - name: Show Infos
+      run: | 
+        echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'
+        ls -la publish        
       
     - name: Upload Release
       uses: softprops/action-gh-release@v2
@@ -68,7 +70,7 @@ jobs:
         prerelease: false    
         tag_name: ${{ github.run_number }}
         body: ${{ github.event.head_commit.message }}
-        files: ${{ github.workspace }}\bin\Release\net8.0\win-x64\publish\ClockConsoleApp.exe, ${{ github.workspace }}\bin\Release\net8.0\linux-x64\publish\ClockConsoleApp
+        files: ${{ github.workspace }}\ClockConsoleApp.exe, ${{ github.workspace }}\publish\ClockConsoleApp
       env:
         GITHUB_TOKEN: ${{ github.token }} 
         
