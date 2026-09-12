@@ -73,7 +73,7 @@ jobs:
         prerelease: false    
         tag_name: ${{ github.run_number }}
         body: ${{ github.event.head_commit.message }}
-        files: ${{ github.workspace }}\publish\ClockConsoleApp.exe, ${{ github.workspace }}\publish\ClockConsoleApp
+        files: ${{ github.workspace }}/publish/ClockConsoleApp.exe, ${{ github.workspace }}/publish/ClockConsoleApp
       env:
         GITHUB_TOKEN: ${{ github.token }} 
         
