@@ -1,0 +1,51 @@
+name: Build
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+  workflow_dispatch:
+  workflow_call:
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+                
+    - name: publish-windows
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: | 
+        dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
+
+    - name: publish-linux
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: | 
+        dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o ./publish
+      
+    - name: Show Infos
+      run: | 
+        echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'
+        pwd
+        ls -la publish        
+      
+    - name: Upload Release
+      uses: softprops/action-gh-release@v2
+      with:
+        draft: false
+        prerelease: false    
+        tag_name: ${{ github.run_number }}
+        body: ${{ github.event.head_commit.message }}
+        files: ${{ github.workspace }}/publish/ClockConsoleApp.exe, ${{ github.workspace }}/publish/ClockConsoleApp
+      env:
+        GITHUB_TOKEN: ${{ github.token }} 
+        
