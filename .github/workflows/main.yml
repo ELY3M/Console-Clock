@@ -38,34 +38,34 @@ jobs:
         pwd
         ls -la publish        
       
-    # - name: Upload Release
-      # uses: softprops/action-gh-release@v2
-      # with:
-        # draft: false
-        # prerelease: false    
-        # tag_name: ${{ github.run_number }}
-        # body: ${{ github.event.head_commit.message }}
-        # files: ${{ github.workspace }}/publish/ClockConsoleApp.exe, ${{ github.workspace }}/publish/ClockConsoleApp
-      # env:
-        # GITHUB_TOKEN: ${{ github.token }} 
-        
-        
-    - name: Create Release
-      uses: actions/create-release@latest
-      env:
-        GITHUB_TOKEN: ${{ github.token }} 
+    - name: Upload Release
+      uses: softprops/action-gh-release@v2
       with:
         draft: false
-        prerelease: false
-        release_name: ${{ github.run_number }}
+        prerelease: false    
         tag_name: ${{ github.run_number }}
-        body: ${{ github.event.head_commit.message }}        
-        
-        
-    - name: Upload Release
-      run: |
-           gh release upload ${{ github.run_number }} ${{ github.workspace }}/publish/ClockConsoleApp.exe 
-           gh release upload ${{ github.run_number }} ${{ github.workspace }}/publish/ClockConsoleApp
+        body: ${{ github.event.head_commit.message }}
+        files: ${{ github.workspace }}/publish/ClockConsoleApp.exe, ${{ github.workspace }}/publish/ClockConsoleApp
       env:
-        GITHUB_TOKEN: ${{ github.token }}        
+        GITHUB_TOKEN: ${{ github.token }} 
+        
+        
+    # - name: Create Release
+      # uses: actions/create-release@latest
+      # env:
+        # GITHUB_TOKEN: ${{ github.token }} 
+      # with:
+        # draft: false
+        # prerelease: false
+        # release_name: ${{ github.run_number }}
+        # tag_name: ${{ github.run_number }}
+        # body: ${{ github.event.head_commit.message }}        
+        
+        
+    # - name: Upload Release
+      # run: |
+           # gh release upload ${{ github.run_number }} ${{ github.workspace }}/publish/ClockConsoleApp.exe 
+           # gh release upload ${{ github.run_number }} ${{ github.workspace }}/publish/ClockConsoleApp
+      # env:
+        # GITHUB_TOKEN: ${{ github.token }}        
         
